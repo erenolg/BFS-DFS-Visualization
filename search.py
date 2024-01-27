@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
+from queue import PriorityQueue
+import math
+
 
 class Search:
     
@@ -56,6 +59,48 @@ class Search:
         self.last_progress = visited
         return
     
+    def astar(self, map, h="manhattan"):
+        
+        if h == "manhattan": h = manhattan
+        elif h == "euclidian": h = euclidian
+        else:
+            print("Heuristic function not found, default will be used!")
+            h = manhattan
+
+
+        self.last_map = map
+        start, target = map.start, map.target
+        graph = map.graph
+
+        queue = PriorityQueue()
+        visited = []
+
+        g_score = {cell: float('inf') if cell!=start else 0 for cell in graph.nodes}
+        f_score = {cell: float('inf') if cell!=start else h(start,target) for cell in graph.nodes}
+
+        queue.put((f_score[start], h(start, target), start))
+
+        while queue:
+            current = queue.get()[2]
+            visited.append(current)
+            if current == target:
+                print(f"Found at {current} || {len(visited)} steps")
+                self.last_progress = visited
+                return
+            neighbors = list(graph.neighbors(current))
+            for neighbor in neighbors:
+                temp_g = g_score[current]+1
+                temp_f = temp_g + h(neighbor, target)
+                
+                if temp_f < f_score[neighbor]:
+                    g_score[neighbor] = temp_g
+                    f_score[neighbor] = temp_f
+                    queue.put((f_score[neighbor], h(neighbor, target), neighbor))
+        print(f"Not found in {len(visited)} steps")
+        self.last_progress = visited
+        return
+
+    
     def plot_progress(self):
         if not self.last_progress:
             print("Progress not found!") 
@@ -85,3 +130,14 @@ class Search:
                     axes[i, j].axis('off')  # Turn off empty subplots if any
 
         plt.show()
+
+
+def manhattan(current, target):
+    currx, curry = current
+    tarx, tary = target
+    return abs(currx - tarx) + abs(curry - tary)
+
+def euclidian(current, target):
+    currx, curry = current
+    tarx, tary = target
+    return math.sqrt(abs(currx - tarx)**2 + abs(curry - tary)**2)
