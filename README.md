@@ -1,4 +1,4 @@
-# BFS-DFS-Visualization
+# Graph-Based Search Alghoritms Visualization
 
 - BFS, DFS and A* search algorithms are visualized.
 
