@@ -129,8 +129,3 @@ def create_map(w, h=None, start=(0,0), d=0.1):
     mapp.add_graph(graph)
 
     return mapp
-
-if __name__ == "__main__":
-    mapp = Map(np.ones((12,12)), (5,5))
-    print(mapp.start)
-

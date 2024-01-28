@@ -130,6 +130,7 @@ class Search:
                     axes[i, j].axis('off')  # Turn off empty subplots if any
 
         plt.show()
+        return progress[-2]
 
 
 def manhattan(current, target):
